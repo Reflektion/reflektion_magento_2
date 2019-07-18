@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <block
+                    class="Reflektion\Catalogexport\Block\Analytics"
+                    name="before_body_end_script_customerlogin"
+                    template="Reflektion_Catalogexport::analytics/rfk_customer_login_analytics.phtml"
+                    cacheable="false"
+            />
+        </referenceContainer>
+    </body>
+</page>

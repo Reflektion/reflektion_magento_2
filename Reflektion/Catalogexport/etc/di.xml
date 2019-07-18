@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    <type name="Reflektion\Catalogexport\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Reflektion\Catalogexport\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">reflektionLogger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Reflektion\Catalogexport\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Category">
+        <plugin name="rfk_category_url" type="Reflektion\Catalogexport\Plugin\Category" sortOrder="1" />
+    </type>
+    <type name="Magento\Search\Helper\Data">
+        <plugin name="rfk_search_form_change" type="Reflektion\Catalogexport\Plugin\Search\Helper\Data" sortOrder="1" />
+    </type>
+</config>

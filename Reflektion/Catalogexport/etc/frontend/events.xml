@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="layout_load_before">
+        <observer name="reflektion_analytics_push" instance="Reflektion\Catalogexport\Observer\Analytics"/>
+    </event>
+    <event name="sales_quote_remove_item">
+        <observer name="rfk_remove_item_cart_observer" instance="Reflektion\Catalogexport\Observer\CartUpdatedSession"/>
+    </event>
+    <event name="checkout_cart_update_items_after">
+        <observer name="rfk_update_item_cart_observer" instance="Reflektion\Catalogexport\Observer\CartUpdatedSession"/>
+    </event>
+    <event name="checkout_cart_add_product_complete">
+        <observer name="add_to_cart_add_script" instance="Reflektion\Catalogexport\Observer\AddToCartScriptComplete"/>
+    </event>
+    <event name="customer_login">
+        <observer name="rfk_customer_login" instance="Reflektion\Catalogexport\Observer\CustomerLoginSuccess"/>
+    </event>
+</config>

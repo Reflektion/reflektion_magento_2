@@ -1,0 +1,47 @@
+<?php
+$cartProducts = $block->getCartAnalyticsData();
+$script = $block->getConfig('reflektion_analytics/script/statusofcart');
+$script = str_replace("{PRODUCTS}", json_encode($cartProducts, JSON_NUMERIC_CHECK), $script);
+$script = json_decode(json_encode($script, JSON_NUMERIC_CHECK));
+$notNumber = $block->getConfig('reflektion_analytics/script/number_attr');
+$arrayNotNumber = explode(',', $notNumber);
+?>
+<script type="text/javascript">
+    <?php
+    $arraykeys = array();
+    foreach ($arrayNotNumber as $arrayNotNumberE) {
+        $lastPos = 0;
+
+        while (($lastPos = strpos($script, '"' . $arrayNotNumberE . '"', $lastPos)) !== false) {
+            $pos = $lastPos + strlen($arrayNotNumberE) + 1;
+            $lastPos = $lastPos + strlen('"' . $arrayNotNumberE . '"');
+            for ($i = $pos + 1; $i < strlen($script); $i++) {
+                if ($script[$i] == '"') {
+                    break;
+                } elseif (is_numeric($script[$i])) {
+                    $num = '';
+                    for ($j = $i; $j < strlen($script); $j++) {
+                        if ($script[$j] == ',' || $script[$j] == ' ' || $script[$j] == '}') {
+                            break;
+                        } else {
+                            $num .= $script[$j];
+                        }
+                    }
+                    $arraykeys[$i][] = $j;
+                    $arraykeys[$i][] = $num;
+
+                    break;
+                } elseif ($script[$i] == ',') {
+                    break;
+                }
+            }
+        }
+    }
+    krsort($arraykeys);
+    foreach ($arraykeys as $key => $val) {
+        $script = substr($script, 0, $key) . '"' . $val[1] . '"' . substr($script, $val[0]);
+    }
+    ?>
+    <?php echo $script; ?>
+
+</script>

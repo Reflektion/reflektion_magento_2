@@ -1,0 +1,15 @@
+<!--@subject {{trans "Reflektion_Catalogexport job id %job_id fails for Website id %website_id " job_id=$jobId website_id=$websiteId}} @--><!--@vars {
+"var this.getUrl($store, 'admin')":"Warehouse Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name"
+} @-->
+
+{{template config_path="design/email/header_template"}} <!-- pathe of template header-->
+
+
+<!-- you can Modify content of template according to your requirement-->
+<div>
+    {{trans "%msg" msg=$msg}}
+</div>
+
+{{template config_path="design/email/footer_template"}} <!--footer of template-->

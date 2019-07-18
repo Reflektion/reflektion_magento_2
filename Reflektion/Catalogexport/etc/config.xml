@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <reflektion_analytics>
+            <script>
+                <analyticsflag>disabled</analyticsflag>
+                <addressrfkattr>
+                {
+                    "address_line_1":"{street}", 
+                    "city":"{city}",
+                    "state":"{region}",
+                    "Zip":"{postcode}"
+                }
+                </addressrfkattr>
+                <global_product_template>
+                {
+                    "sku": "{sku}",
+                    "price": "{price}",
+                    "quantity": "{qty}",
+                    "attributes": "{{ATTRIBUTES}}"
+                }
+                </global_product_template>
+                <number_attr>sku,zip,id</number_attr>
+                <productviewed>
+                rfk.push(["trackEvent", {
+                    "type": "view",
+                    "name": "{NAME}",
+                    "value":{
+                         "products":[{PRODUCT}]
+                    }
+                }]);
+                </productviewed>
+                <productviewedproduct>
+                {
+                    "sku": "{sku}",
+                    "quantity": "{qty}",
+                    "price": "{price}",
+                    "attributes": "{ATTRIBUTES}"
+                }
+                </productviewedproduct>
+                <productaddedtocart>
+                rfk.push(["trackEvent", {
+                    "type": "a2c",
+                    "name": "{NAME}",
+                    "value":{
+                         "products":[{PRODUCTS}]
+                      }
+                 }]);
+                </productaddedtocart>
+                <productaddedtocart_template>
+                {
+                    "sku": "{sku}",
+                    "price": "{price}",
+                    "quantity": "{qty}",
+                    "is_in_stock": "{is_in_stock}",
+                    "special_price":"{special_price}",
+                    "attributes": "{ATTRIBUTES}"
+                }
+                </productaddedtocart_template>
+                <statusofcart>
+                rfk.push(["trackEvent", {
+                    "type": "status",
+                    "name": "cart",
+                    "value":{
+                        "products":{PRODUCTS}
+                    }
+                }]);
+                </statusofcart>
+                <statusofcart_template>
+                {
+                    "sku": "{sku}",
+                    "price": "{price}",
+                    "quantity": "{qty}",
+                    "is_in_stock": "{is_in_stock}",
+                    "attributes": "{ATTRIBUTES}"
+                }
+                </statusofcart_template>
+                <userloggedin>
+                rfk.push(["trackEvent", {
+                    "type": "user",
+                    "name": "login",
+                    "value": {
+                        "user": {
+                            "id":"{ID}",
+                            "first_name":"{FIRST_NAME}",
+                            "last_name":"{LAST_NAME}",
+                            "email":"{EMAIL}",
+                            "address": {ADDRESS},
+                            "attributes": {ATTRIBUTES}
+                         }
+                   }
+                }]);
+                </userloggedin>
+                <confirmedorder>
+                rfk.push(["trackEvent", {
+                    "type": "order",
+                    "name": "confirm",
+                    "value": {
+                        "products": {PRODUCTS},
+                        "checkout": {
+                            "order_id": "{ORDER_ID}",
+                            "shipping_cost": {SHIPPING_COST},
+                            "subtotal": {SUBTOTAL},
+                            "total": {TOTAL},
+                            "shipping_address": {SHIPPING_ADDRESS}
+                        },
+                        "user": {
+                            "id":"{ID}",
+                            "first_name":"{FIRST_NAME}",
+                            "last_name":"{LAST_NAME}",
+                            "email":"{EMAIL}",
+                            "address": {ADDRESS}
+                        }
+                   }
+                }]);
+                </confirmedorder>
+                <confirmedorderproduct>
+                {
+                    "sku": "{sku}",
+                    "price": "{price}",
+                    "quantity": "{qty}",
+                    "attributes": "{ATTRIBUTES}"
+                }
+                </confirmedorderproduct>
+                
+            </script>
+        </reflektion_analytics>
+    </default>
+</config>

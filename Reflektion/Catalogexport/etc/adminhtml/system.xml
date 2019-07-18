@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Location: magento2_root/app/code/Reflektion/Catalogexport/etc/adminhtml/system.xml
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="reflektion" translate="label" sortOrder="1000">
+            <label>Reflektion</label>
+        </tab>
+        <section id="reflektion_datafeeds" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Data Feeds/Features</label>
+            <tab>reflektion</tab>
+            <resource>Reflektion_Catalogexport::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="allfeedsenabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Data Feeds Enabled</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                    <backend_model>Reflektion\Catalogexport\Model\System\Validate\Sftp</backend_model>
+                    <comment>Enable default data feeds to turn on export for all websites</comment>
+                </field>
+                <field id="addbycustomerid" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Add Beacon(init.js) Automatically</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                    <comment>If Disabled, make sure you add RFK beacon(init.js) manually</comment>
+                </field>
+                <field id="customerid" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Customer Key</label>
+                </field>
+                <field id="testorlive" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Environment</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\Rfkenv</source_model>
+                </field>
+                <field id="apikey" translate="label" type="text" sortOrder="5" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>API Key(Live)</label>
+                    <depends>
+                        <field id="testorlive">live</field>
+                    </depends>
+                </field>
+                <field id="apikeyuat" translate="label" type="text" sortOrder="5" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>API Key(UAT)</label>
+                    <depends>
+                        <field id="testorlive">uat</field>
+                    </depends>
+                </field>
+                <field id="apikeystaging" translate="label" type="text" sortOrder="6" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>API Key(Staging)</label>
+                    <depends>
+                        <field id="testorlive">staging</field>
+                    </depends>
+                </field>
+                <field id="apikeytest" translate="label" type="text" sortOrder="7" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>API Key(Test)</label>
+                    <depends>
+                        <field id="testorlive">test</field>
+                    </depends>
+                </field>
+                <field id="addfiltermap" translate="label" sortOrder="8" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Mapping</label>
+                    <frontend_model>Reflektion\Catalogexport\Block\Config\Mapping</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>Add filter attributes mapping</comment>
+                </field>
+            </group>
+            <group id="search" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
+                <label>Search Setting</label>
+                <field id="searchflagivs" translate="label" type="select" sortOrder="0" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>IVS (Instant Visual Search)</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="searchivsboxindex" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>IVS Search Box Position</label>
+                    <validate>validate-number</validate>
+                    <depends>
+                        <field id="searchflagivs">enabled</field>
+                    </depends>
+                    <comment>Default is 2</comment>
+                </field>
+                <field id="searchflag" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Full Page Search</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="apiurl" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="0">
+                    <label>API Host URL</label>
+                </field>
+                <field id="rfkjs" translate="label" type="text" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="0">
+                    <label>RFK JS URL</label>
+                </field>
+                <field id="selectrfkexp" translate="label" type="select" sortOrder="7" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Full Page Search Integration</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\Rfkexp</source_model>
+                    <backend_model>Reflektion\Catalogexport\Model\System\Config\Search</backend_model>
+                    <depends>
+                        <field id="searchflag">enabled</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="categorypages" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
+                <label>Category Pages</label>
+                <field id="fpsenabled" translate="label" type="select" sortOrder="0" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Category Pages</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="fpsoption" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Category URL redirect</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\Rfkcat</source_model>
+                    <depends>
+                        <field id="fpsenabled">enabled</field>
+                    </depends>
+                </field>
+                <field id="uritext" translate="label" type="text" sortOrder="2" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Text for path</label>
+                    <comment>Only keyword (example - rfkpage)</comment>
+                    <depends>
+                        <field id="fpsenabled">enabled</field>
+                        <field id="fpsoption">2</field>
+                    </depends>
+                </field>
+                <field id="subdomaintext" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Sub-Domain</label>
+                    <comment>Full URL (http://subdomain.reflektion.com/)</comment>
+                    <depends>
+                        <field id="fpsenabled">enabled</field>
+                        <field id="fpsoption">3</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="email" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Email Addresses</label>
+                <field id="list" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Email Addresses</label>
+                    <comment>On a job failure send a mail to these emails</comment>
+                </field>
+                <field id="job_failure_email" translate="label comment" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Job Failure Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+            </group>
+            <group id="configurable_cron" translate="label" type="text" sortOrder="2" showInDefault="0" showInWebsite="1" showInStore="0">
+                <label>Cron Schedule</label>
+                <field id="frequency" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Frequency(Server Time)</label>
+                    <frontend_model>Reflektion\Catalogexport\Block\System\Config\Renderer</frontend_model>
+                    <backend_model>Reflektion\Catalogexport\Model\System\Config\Cron</backend_model>
+                    <comment>Save below cron options to see cron expression here</comment>
+                </field>
+                <field id="frequency_min" translate="label" type="select" sortOrder="20" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Cron - Minute</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\Minute</source_model>
+                    <comment>Set cron job for all websites</comment>
+                </field>
+                <field id="frequency_hr" translate="label" type="select" sortOrder="30" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Cron - Hour</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\Hour</source_model>
+                    <comment>Set cron job for all websites</comment>
+                </field>
+                <field id="frequency_day" translate="label" type="select" sortOrder="40" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Cron - Day</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\Day</source_model>
+                    <comment>Set cron job for all websites</comment>
+                </field>
+                <field id="frequency_month" translate="label" type="select" sortOrder="50" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Cron - Month</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\Month</source_model>
+                    <comment>Set cron job for all websites</comment>
+                </field>
+                <field id="frequency_wk" translate="label" type="select" sortOrder="60" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Cron - Weekday</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\Weekday</source_model>
+                    <comment>Set cron job for all websites</comment>
+                </field>
+            </group>
+            <group id="connect" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>SFTP Connectivity</label>
+                <field id="hostname" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Hostname</label>
+                    <comment>Enter Hostname provided by Reflektion</comment>
+                </field>
+                <field id="port" translate="label" type="text" sortOrder="2" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Port Number</label>
+                    <validate>validate-number</validate>
+                    <comment>Enter the port number provided by Reflektion</comment>
+                </field>
+                <field id="path" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Path</label>
+                    <comment>Enter Path provided by Reflektion</comment>
+                </field>
+                <field id="username" translate="label" type="text" sortOrder="4" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Username</label>
+                    <comment>Enter SFTP username provided by Reflektion</comment>
+                </field>
+                <field id="password" translate="label" type="password" sortOrder="5" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Password</label>
+                    <comment>Enter SFTP account password provided by Reflektion</comment>
+                </field>
+            </group>
+            <group id="feedsenabled" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Data Feeds</label>
+                <field id="notice" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="0" showInStore="1">
+                    <frontend_model>Reflektion\Catalogexport\Block\Adminhtml\System\Config\CommentText</frontend_model>
+                    <comment><![CDATA[
+                                To configure <b>Data Feeds</b>, please select a <b>website</b> scope from the <i>Current Configuration Scope</i> dropdown
+                                ]]>
+                    </comment>
+                </field>
+                <field id="product" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Product Feed</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="category" translate="label" type="select" sortOrder="3" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Category Feed</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="product_attributes" translate="label" type="multiselect" sortOrder="4" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Product Custom Attributes</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\ProductAttributes</source_model>
+                </field>
+                <field id="transaction" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Transactions Feed</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="date_range" translate="label" type="text" sortOrder="6" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Transaction Feed select export range</label>
+                    <comment><![CDATA[
+                                Number of days (Default is 30)
+                                ]]>
+                    </comment>
+                </field>
+                <field id="shipping" translate="label" type="select" sortOrder="7" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Add Shipping address to transaction feed</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="billing" translate="label" type="select" sortOrder="8" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Add Billing address to transaction feed</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="promotion" translate="label" type="select" sortOrder="9" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Promotions Feed</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+            </group>
+        </section>
+        <section id="reflektion_analytics" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Analytics Configuration</label>
+            <tab>reflektion</tab>
+            <resource>Reflektion_Catalogexport::config</resource>
+            <group id="script" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="notice" translate="label" type="text" sortOrder="0" showInDefault="0" showInWebsite="1" showInStore="1">
+                    <frontend_model>Reflektion\Catalogexport\Block\Adminhtml\System\Config\CommentText</frontend_model>
+                    <comment><![CDATA[
+                                Only Global/Default configuration is allowed for RFK Analytics script
+                                ]]>
+                    </comment>
+                </field>
+                <field id="analyticsflag" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Reflektion Analytics</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="product_attributes" translate="label" type="multiselect" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Custom Attributes</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\ProductAttributes</source_model>
+                    <backend_model>Reflektion\Catalogexport\Model\System\Validate\Json</backend_model>
+                    <comment>Select product attributes to send for RFK Analytics</comment>
+                </field>
+                <field id="customer_attributes" translate="label" type="multiselect" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Customer Custom Attributes</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\CustomerAttributes</source_model>
+                    <comment>Select customer attributes to send for RFK Analytics</comment>
+                </field>
+                <field id="addressrfkattr" translate="label" type="textarea" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add Address Attributes to select</label>
+                    <comment>Address attributes - send to RFK</comment>
+                </field>
+                <field id="global_product_template" translate="label" type="textarea" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Global Product Template</label>
+                    <validate>required-entry</validate>
+                    <comment>Global/Default template used when template not defined for particular event</comment>
+                </field>
+                <field id="number_attr" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Number attribute should be in double quotes</label>
+                    <comment>Comma separated</comment>
+                </field>
+                <field id="productviewed" translate="label" type="textarea" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Viewed</label>
+                    <comment>Global/Default template used when template not defined for particular event</comment>
+                </field>
+                <field id="productquickview" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Quick View Identifier</label>
+                </field>
+                <field id="productviewedproduct" translate="label" type="textarea" sortOrder="8" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Viewed Product template</label>
+                </field>
+                <field id="productaddedtocart" translate="label" type="textarea" sortOrder="9" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add to cart</label>
+                </field>
+                <field id="productaddedtocart_template" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add to cart Product Template</label>
+                </field>
+                <field id="statusofcart" translate="label" type="textarea" sortOrder="11" showInDefault="11" showInWebsite="0" showInStore="0">
+                    <label>Status of cart</label>
+                </field>
+                <field id="statusofcart_template" translate="label" type="textarea" sortOrder="12" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Status of Cart Template</label>
+                </field>
+                <field id="userloggedin" translate="label" type="textarea" sortOrder="13" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>User logged in</label>
+                </field>
+                <field id="confirmedorder" translate="label" type="textarea" sortOrder="14" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Order Confirmation</label>
+                </field>
+                <field id="confirmedorderproduct" translate="label" type="textarea" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Order Confirmation Product Data</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

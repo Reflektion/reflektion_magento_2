@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Reflektion\Catalogexport\Block\Adminhtml\Export" name="adminhtml.block.generate.feeds.grid.container">
+                <block class="Reflektion\Catalogexport\Block\Adminhtml\Export\Grid" name="adminhtml.block.generate.feeds.grid" as="grid">
+                    <arguments>
+                        <argument name="id" xsi:type="string">reflektion_catalogexport_generate_feeds_grid</argument>
+                        <argument name="dataSource" xsi:type="object">Reflektion\Catalogexport\Model\ResourceModel\Job\Collection</argument>
+                        <argument name="default_sort" xsi:type="string">sort_order</argument>
+                        <argument name="default_dir" xsi:type="string">ASC</argument>
+                        <argument name="save_parameters_in_session" xsi:type="string">1</argument>
+                        <argument name="filter_visibility" xsi:type="string">1</argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

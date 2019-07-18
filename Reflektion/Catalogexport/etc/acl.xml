@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Reflektion_Catalogexport::reflektion" title="Reflektion" sortOrder="51">
+                    <resource id="Reflektion_Catalogexport::export" title="Generate Feeds" sortOrder="10"/>
+                    <resource id="Reflektion_Catalogexport::job" title="Feeds in Queue" sortOrder="99" />
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Reflektion_Catalogexport::config" title="Reflektion" sortOrder="50" />
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

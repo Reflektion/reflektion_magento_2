@@ -1,0 +1,72 @@
+<?php
+if ($this->getRequest()->isXmlHttpRequest()) {
+    return;
+}
+$session = $block->getSession();
+$data = $session->getData('addtocart_triggered');
+if (!empty($data)):
+    foreach ($data as $dataE) :
+        $result = array();
+        $script = $block->getConfig('reflektion_analytics/script/productaddedtocart');
+        if (isset($dataE['super_group'])) {
+            $superGroup = $dataE['super_group'];
+            foreach ($superGroup as $pid => $pqty) {
+                $result[] = $this->getAttributes($pid, $pqty, true);
+            }
+        } elseif (isset($dataE['bundle_option'])) {
+            $result = $this->getAttributes($dataE['id'], $dataE['qty'], false, $dataE['bundle_option']);
+        } else {
+            $result = $this->getAttributes($dataE['sku'], $dataE['qty']);
+        }
+        $pageName = $block->getPageName($session->getData('cart_triggered_page'));
+        $script = str_replace("{NAME}", $pageName, $script);
+        $script = str_replace("{PRODUCTS}", json_encode($result, JSON_NUMERIC_CHECK), $script);
+        $script = json_decode(json_encode($script, JSON_NUMERIC_CHECK));
+        $notNumber = $block->getConfig('reflektion_analytics/script/number_attr');
+        $arrayNotNumber = explode(',', $notNumber);
+        ?>
+        <script type="text/javascript">
+            <?php
+            $arraykeys = array();
+            foreach ($arrayNotNumber as $arrayNotNumberE) {
+                $lastPos = 0;
+                while (($lastPos = strpos($script, '"' . $arrayNotNumberE . '"', $lastPos)) !== false) {
+                    $pos = $lastPos + strlen($arrayNotNumberE) + 1;
+                    $lastPos = $lastPos + strlen('"' . $arrayNotNumberE . '"');
+                    for ($i = $pos + 1; $i < strlen($script); $i++) {
+                        if ($script[$i] == '"') {
+                            break;
+                        } elseif (is_numeric($script[$i])) {
+                            $num = '';
+                            for ($j = $i; $j < strlen($script); $j++) {
+                                if ($script[$j] == ',' || $script[$j] == ' ' || $script[$j] == '}') {
+                                    break;
+                                } else {
+                                    $num .= $script[$j];
+                                }
+                            }
+                            $arraykeys[$i][] = $j;
+                            $arraykeys[$i][] = $num;
+
+                            break;
+                        } elseif ($script[$i] == ',') {
+                            break;
+                        }
+                    }
+                }
+            }
+            krsort($arraykeys);
+            foreach ($arraykeys as $key => $val) {
+                $script = substr($script, 0, $key) . '"' . $val[1] . '"' . substr($script, $val[0]);
+            }
+            ?>
+            <?php echo $script; ?>
+        </script>
+        <?php
+    endforeach;
+    $session->unsetdata('addtocart_triggered');
+endif;
+
+//Setting the a2c triggered page
+$session->setdata("cart_triggered_page", $block->getCurrentPage());
+?>

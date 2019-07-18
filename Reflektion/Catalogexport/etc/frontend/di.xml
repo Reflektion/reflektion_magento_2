@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Framework\View\Result\Page" type="Reflektion\Catalogexport\Model\Rewrite\Result\Page" />
+    <!-- <preference for="Magento\CatalogSearch\Model\Search\IndexBuilder" type="Reflektion\Catalogexport\Model\Search\IndexBuilder" />
+    <preference for="Magento\CatalogSearch\Model\Layer\Filter\Attribute" type="Reflektion\Catalogexport\Model\Layer\Filter\Attribute" />
+    <preference for="Magento\Framework\Search\Adapter\Mysql\Query\Builder\Match" type="Reflektion\Catalogexport\Model\Search\Adapter\Mysql\Query\Builder\Match" />-->
+</config>

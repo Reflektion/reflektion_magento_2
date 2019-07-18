@@ -1,0 +1,84 @@
+<?php
+$product = $block->getProduct();
+if ($product) {
+    $script = $block->getConfig('reflektion_analytics/script/productviewed');
+    $scriptProduct = $block->getConfig('reflektion_analytics/script/productviewedproduct');
+    $notNumber = $block->getConfig('reflektion_analytics/script/number_attr');
+    $arrayNotNumber = explode(',', $notNumber);
+    $productData = $product->getData();
+    $scriptProduct = json_decode($scriptProduct);
+    $allAttr = [];
+    $attributes = [];
+    foreach ($scriptProduct as $key => $val) {
+        $val = trim($val, '{}');
+        if ($val == 'qty') {
+            $allAttr[$key] = $productData['quantity_and_stock_status']['qty'];
+            continue;
+        } elseif ($val == 'ATTRIBUTES') {
+            $productAttributesConf = $block->getConfig('reflektion_analytics/script/product_attributes');
+            $productAttributes = explode(',', $productAttributesConf);
+            $attributes = [];
+            foreach ($productAttributes as $productAttribute) {
+                if (!empty($productData[$productAttribute])) {
+                    $attributes[$productAttribute] = $product->getAttributeText($productAttribute);
+                }
+            }
+            if ($productAttributesConf == "") {
+                $allAttr[$key] = (object)array();
+            } else {
+                $allAttr[$key] = $attributes;
+            }
+            continue;
+        }
+
+        if (isset($productData[$val])) {                
+            $allAttr[$key] = $productData[$val];       
+        }                                               
+    }
+    $session = $block->getSession();
+    $data = $session->getData('rfk_product_view');
+
+    $script = str_replace("{PRODUCT}", json_encode($allAttr, JSON_NUMERIC_CHECK), $script);
+    $script = str_replace("{NAME}", $data, $script);
+    $session->unset('rfk_product_view');
+    $script = json_decode(json_encode($script, JSON_NUMERIC_CHECK));
+    ?>
+    <script type="text/javascript">
+        <?php
+        $arraykeys = array();
+        foreach ($arrayNotNumber as $arrayNotNumberE) {
+            $lastPos = 0;
+            while (($lastPos = strpos($script, '"' . $arrayNotNumberE . '"', $lastPos)) !== false) {
+                $pos = $lastPos + strlen($arrayNotNumberE) + 1;
+                $lastPos = $lastPos + strlen('"' . $arrayNotNumberE . '"');
+                for ($i = $pos + 1; $i < strlen($script); $i++) {
+                    if ($script[$i] == '"') {
+                        break;
+                    } elseif (is_numeric($script[$i])) {
+                        $num = '';
+                        for ($j = $i; $j < strlen($script); $j++) {
+                            if ($script[$j] == ',' || $script[$j] == ' ' || $script[$j] == '}') {
+                                break;
+                            } else {
+                                $num .= $script[$j];
+                            }
+                        }
+                        $arraykeys[$i][] = $j;
+                        $arraykeys[$i][] = $num;
+
+                        break;
+                    } elseif ($script[$i] == ',') {
+                        break;
+                    }
+                }
+            }
+        }
+        krsort($arraykeys);
+        foreach ($arraykeys as $key => $val) {
+            $script = substr($script, 0, $key) . '"' . $val[1] . '"' . substr($script, $val[0]);
+        }
+        ?>
+        <?php echo $script; ?>
+
+    </script>
+<?php } ?>

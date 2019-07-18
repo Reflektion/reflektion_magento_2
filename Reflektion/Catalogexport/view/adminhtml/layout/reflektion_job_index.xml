@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Reflektion\Catalogexport\Block\Adminhtml\Job" name="adminhtml.block.feeds.in.queue.grid.container">
+                <block class="Magento\Backend\Block\Widget\Grid" name="adminhtml.block.feeds.in.queue.grid" as="grid">
+                    <arguments>
+                        <argument name="id" xsi:type="string">reflektion_catalogexport_feeds_in_queue_grid</argument>
+                        <argument name="dataSource" xsi:type="object">Reflektion\Catalogexport\Model\ResourceModel\Job\Collection</argument>
+                        <argument name="default_sort" xsi:type="string">job_id</argument>
+                        <argument name="default_dir" xsi:type="string">DESC</argument>
+                        <argument name="save_parameters_in_session" xsi:type="string">1</argument>
+                        <argument name="filter_visibility" xsi:type="string">1</argument>
+                    </arguments>
+                    <block class="Magento\Backend\Block\Widget\Grid\Massaction" name="adminhtml.block.feeds.in.queue.grid.massaction" as="grid.massaction">
+                        <arguments>
+                            <argument name="massaction_id_field" xsi:type="string">job_id</argument>
+                            <argument name="form_field_name" xsi:type="string">job_id</argument>
+                            <argument name="use_select_all" xsi:type="string">1</argument>
+                            <argument name="options" xsi:type="array">
+                                <item name="delete" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Delete</item>
+                                    <item name="url" xsi:type="string">*/*/massDelete</item>
+                                    <item name="confirm" xsi:type="string" translate="true">Are you sure?</item>
+                                </item>
+                                <item name="run" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Run Job</item>
+                                    <item name="url" xsi:type="string">*/*/massRun</item>
+                                    <item name="confirm" xsi:type="string" translate="true">
+                                        Run selected job(s)?  Note that running multiple and/or jobs may impact site performance.
+                                    </item>
+                                </item>
+                            </argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Widget\Grid\ColumnSet" as="grid.columnSet" name="adminhtml.block.feeds.in.queue.grid.columnSet">
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="job_id">
+                            <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Job ID</argument>
+                            <argument name="index" xsi:type="string">job_id</argument>
+                            <argument name="width" xsi:type="string">10px</argument>
+                            <argument name="column_css_class" xsi:type="string">col-id</argument>
+                            <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="website_name">
+                            <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Website Name</argument>
+                            <argument name="index" xsi:type="string">website_id</argument>
+                            <argument name="type" xsi:type="string">options</argument>
+                            <argument name="options" xsi:type="options" model="Reflektion\Catalogexport\Model\Job\Grid\Options\Websites"/>
+                            <!--<argument name="renderer" xsi:type="string">Reflektion\Catalogexport\Block\Adminhtml\Job\Grid\Renderer\Renderer</argument>-->
+                            <argument name="column_css_class" xsi:type="string">col-id</argument>
+                            <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="website_id">
+                            <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Website ID</argument>
+                            <argument name="index" xsi:type="string">website_id</argument>
+                                <argument name="width" xsi:type="string">10px</argument>
+                            <argument name="column_css_class" xsi:type="string">col-id</argument>
+                            <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="type">
+                            <arguments>
+                                <argument name="header" xsi:type="string" translate="true">Job Type</argument>
+                                <argument name="index" xsi:type="string">type</argument>
+                                <argument name="type" xsi:type="string">options</argument>
+                                <argument name="options" xsi:type="options" model="Reflektion\Catalogexport\Model\Job\Grid\Options\Feedtypes"/>
+                                <argument name="column_css_class" xsi:type="string">col-id</argument>
+                                <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="feed_type">
+                            <arguments>
+                                <argument name="header" xsi:type="string" translate="true">Feed Type</argument>
+                                <argument name="index" xsi:type="string">feed_type</argument>
+                                <argument name="column_css_class" xsi:type="string">col-id</argument>
+                                <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="scheduled_at">
+                            <arguments>
+                                <argument name="header" xsi:type="string" translate="true">Scheduled</argument>
+                                <argument name="index" xsi:type="string">scheduled_at</argument>
+                                <argument name="type" xsi:type="string">datetime</argument>
+                                <argument name="column_css_class" xsi:type="string">col-id</argument>
+                                <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="ended_at">
+                            <arguments>
+                                <argument name="header" xsi:type="string" translate="true">Completed</argument>
+                                <argument name="index" xsi:type="string">ended_at</argument>
+                                <argument name="type" xsi:type="string">datetime</argument>
+                                <argument name="column_css_class" xsi:type="string">col-id</argument>
+                                <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="latest_feed">
+                            <arguments>
+                                <argument name="header" xsi:type="string" translate="true">Latest Feed</argument>
+                                <argument name="sortable" xsi:type="string">0</argument>
+                                <argument name="filter" xsi:type="string">0</argument>
+                                <argument name="type" xsi:type="string">action</argument>
+                                <argument name="id" xsi:type="string">actions</argument>
+                                <argument name="index" xsi:type="string">latest_feed</argument>
+                                <argument name="renderer" xsi:type="string">Reflektion\Catalogexport\Block\Adminhtml\Job\Grid\Renderer\Action</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="status">
+                            <arguments>
+                                <argument name="header" xsi:type="string" translate="true">Status</argument>
+                                <argument name="index" xsi:type="string">status</argument>
+                                <argument name="type" xsi:type="string">options</argument>
+                                <argument name="options" xsi:type="options" model="Reflektion\Catalogexport\Model\Job\Grid\Options\Status"/>
+                                <argument name="column_css_class" xsi:type="string">col-id</argument>
+                                <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="error_message">
+                            <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Error Message</argument>
+                            <argument name="index" xsi:type="string">error_message</argument>
+                            <argument name="width" xsi:type="string">25px</argument>
+                            <argument name="column_css_class" xsi:type="string">col-id</argument>
+                            <argument name="header_css_class" xsi:type="string">col-id</argument>
+                            </arguments>
+                        </block>
+                    </block>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

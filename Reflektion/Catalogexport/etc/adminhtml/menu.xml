@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Reflektion_Catalogexport::reflektion" title="Reflektion" translate="title" module="Reflektion_Catalogexport" sortOrder="51" resource="Reflektion_Catalogexport::reflektion"/>
+        <add id="Reflektion_Catalogexport::export" title="Generate Feeds" translate="title" module="Reflektion_Catalogexport" parent="Reflektion_Catalogexport::reflektion" sortOrder="50" dependsOnModule="Reflektion_Catalogexport" action="reflektion/export" resource="Reflektion_Catalogexport::export"/>
+        <add id="Reflektion_Catalogexport::job" title="Feeds in Queue" translate="title" module="Reflektion_Catalogexport" parent="Reflektion_Catalogexport::reflektion" sortOrder="10" dependsOnModule="Reflektion_Catalogexport" action="reflektion/job" resource="Reflektion_Catalogexport::job"/>
+    </menu>
+</config>

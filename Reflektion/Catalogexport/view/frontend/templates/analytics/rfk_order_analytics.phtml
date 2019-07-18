@@ -1,0 +1,138 @@
+<?php
+$order = $block->getOrder();
+//products
+$script = $block->getConfig('reflektion_analytics/script/confirmedorder');
+$productAttributes = $block->getConfig('reflektion_analytics/script/product_attributes');
+$productScript = $block->getConfig('reflektion_analytics/script/confirmedorderproduct');
+$productAttributes = explode(',', $productAttributes);
+
+$items = $order->getAllVisibleItems();
+
+$prodData = json_decode($productScript);
+$v = 0;
+$allAttr = array();
+$prodDataAttr = array();
+foreach ($items as $item):
+
+    $productData = $item->getData();
+
+    $productload = $block->getProductModel($productData['product_id']);
+    foreach ($prodData as $key => $val) {
+        $val = trim($val, '{}');
+        if ($val == 'ATTRIBUTES') {
+            $productAttributesconf = $block->getConfig('reflektion_analytics/script/product_attributes');
+            $productAttributes = explode(',', $productAttributesconf);
+
+            foreach ($productAttributes as $productAttribute) {
+                if ($productload[$productAttribute] !== null) {
+                    $prodDataAttr[$productAttribute] = $productload->getAttributeText($productAttribute);
+                }
+            }
+
+            $options = $item->getProductOptions();
+            if (isset($options['attributes_info'])) {
+                $customOptions = $options['attributes_info'];
+                if (!empty($customOptions)) {
+                    foreach ($customOptions as $option) {
+                        if ($option['value'] !== null)
+                            $prodDataAttr[strtolower($option['label'])] = $option['value'];
+                    }
+                }
+            }
+
+            $allAttr[$v][$key] = $prodDataAttr;
+            if ($productAttributesconf == "") {
+                $allAttr[$v][$key] = (object)array();
+            }
+            continue;
+        }
+
+        if (isset($productData[$val])) {       
+            $allAttr[$v][$key] = $productData[$val];    
+        }        
+        if (isset($productData["product_options"]["simple_sku"])) {
+            $allAttr[$v]['sku'] = $productData["product_options"]["simple_sku"];    
+        }    
+        if ($productload["type_id"] == "bundle") {
+            $allAttr[$v]['sku'] = $productload["sku"]; 
+        }                                         
+    }
+    $prodFinalData = $allAttr;
+    $prodDataAttr = array();
+    $v++;
+endforeach;
+
+$script = str_replace("{PRODUCTS}", json_encode($prodFinalData, JSON_NUMERIC_CHECK), $script);
+
+//checkout
+
+$script = str_replace("{ORDER_ID}", $order->getIncrementId(), $script);
+$script = str_replace("{SHIPPING_COST}", number_format($order->getBaseShippingAmount(), 2, '.', ''), $script);
+$script = str_replace("{SUBTOTAL}", number_format($order->getBaseSubtotal(), 2, '.', ''), $script);
+$script = str_replace("{TOTAL}", number_format($order->getGrandTotal(), 2, '.', ''), $script);
+
+$addressAttributes = $block->getConfig('reflektion_analytics/script/addressrfkattr');
+$addressAttributes = json_decode($addressAttributes);
+$shippingAddress = $order->getShippingAddress();
+$shippingAdd = $shippingAddress->getData();
+foreach ($addressAttributes as $key => $val) {
+    $val = trim($val, '{}');
+    if (!empty($shippingAdd[$val])) {
+        $address[$key] = $shippingAdd[$val];
+    }
+}
+
+$address = json_encode($address, JSON_NUMERIC_CHECK);
+
+$script = str_replace("{SHIPPING_ADDRESS}", $address, $script);
+
+//user
+$script = str_replace("{ID}", $order->getCustomerId(), $script);
+$script = str_replace("{FIRST_NAME}", $order->getCustomerFirstname(), $script);
+$script = str_replace("{LAST_NAME}", $order->getCustomerLastname(), $script);
+$script = str_replace("{EMAIL}", $order->getCustomerEmail(), $script);
+$script = str_replace("{ADDRESS}", $address, $script);
+$script = json_decode(json_encode($script, JSON_NUMERIC_CHECK));
+$notNumber = $block->getConfig('reflektion_analytics/script/number_attr');
+$arrayNotNumber = explode(',', $notNumber);
+?>
+<script type="text/javascript">
+    <?php
+    $arraykeys = array();
+    foreach ($arrayNotNumber as $arrayNotNumberE) {
+        $lastPos = 0;
+
+        while (($lastPos = strpos($script, '"' . $arrayNotNumberE . '"', $lastPos)) !== false) {
+            $pos = $lastPos + strlen($arrayNotNumberE) + 1;
+            $lastPos = $lastPos + strlen('"' . $arrayNotNumberE . '"');
+            for ($i = $pos + 1; $i < strlen($script); $i++) {
+                if ($script[$i] == '"') {
+                    break;
+                } elseif (is_numeric($script[$i])) {
+                    $num = '';
+                    for ($j = $i; $j < strlen($script); $j++) {
+                        if ($script[$j] == ',' || $script[$j] == ' ' || $script[$j] == '}') {
+                            break;
+                        } else {
+                            $num .= $script[$j];
+                        }
+                    }
+                    $arraykeys[$i][] = $j;
+                    $arraykeys[$i][] = $num;
+
+                    break;
+                } elseif ($script[$i] == ',') {
+                    break;
+                }
+            }
+        }
+    }
+    krsort($arraykeys);
+    foreach ($arraykeys as $key => $val) {
+        $script = substr($script, 0, $key) . '"' . $val[1] . '"' . substr($script, $val[0]);
+    }
+    ?>
+
+    <?php echo $script; ?>
+</script>
+

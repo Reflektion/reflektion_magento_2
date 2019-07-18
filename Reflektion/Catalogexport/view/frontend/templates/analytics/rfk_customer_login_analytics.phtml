@@ -1,0 +1,85 @@
+<?php
+$customerSession = $block->getCustomerSession();
+if ($customerSession->isLoggedIn()) :
+    $script = $block->getConfig('reflektion_analytics/script/userloggedin');
+    // Load the customer's data
+    $customer = $customerSession->getCustomer();
+    $customerData = $customer->getData();
+    $script = str_replace("{ID}", $customerData['entity_id'], $script);
+    $script = str_replace("{FIRST_NAME}", $customerData['firstname'], $script);
+    $script = str_replace("{LAST_NAME}", $customerData['lastname'], $script); //need to check
+    $script = str_replace("{EMAIL}", $customerData['email'], $script);
+    $customerAttributes = $block->getConfig('reflektion_analytics/script/customer_attributes');
+    $customerAttributesArr = explode(',', $customerAttributes);
+    if ($customerAttributes == "") {
+        $attributes = (object)array();
+    } else {
+        foreach ($customerAttributesArr as $customerAttribute) {
+            $attributes[$customerAttribute] = $customerData[$customerAttribute];
+        }
+    }
+    $attributes = json_encode($attributes, JSON_NUMERIC_CHECK);
+    $script = str_replace("{ATTRIBUTES}", $attributes, $script);
+    $address = [];
+    $addressAttributes = $block->getConfig('reflektion_analytics/script/addressrfkattr');
+    $addressAttributes = json_decode($addressAttributes);
+    $shippingAddress = $customer->getDefaultShippingAddress();
+    if ($shippingAddress) {
+        $shippingAdd = $shippingAddress->getData();
+        foreach ($addressAttributes as $key => $val) {
+            $val = trim($val, '{}');
+            if (!empty($shippingAdd[$val])) {
+                $address[$key] = $shippingAdd[$val];
+            }
+        }
+    }
+    $address = json_encode($address, JSON_NUMERIC_CHECK);
+
+    $script = str_replace("{SHIPPING_ADDRESS}", $address, $script);
+
+    $script = str_replace("{ADDRESS}", $address, $script);
+    $script = json_decode(json_encode($script, JSON_NUMERIC_CHECK));
+    $notNumber = $block->getConfig('reflektion_analytics/script/number_attr');
+    $arrayNotNumber = explode(',', $notNumber);
+    ?>
+    <script type="text/javascript">
+        <?php
+        $arraykeys = array();
+        foreach ($arrayNotNumber as $arrayNotNumberE) {
+            $lastPos = 0;
+
+            while (($lastPos = strpos($script, '"' . $arrayNotNumberE . '"', $lastPos)) !== false) {
+                $pos = $lastPos + strlen($arrayNotNumberE) + 1;
+                $lastPos = $lastPos + strlen('"' . $arrayNotNumberE . '"');
+                for ($i = $pos + 1; $i < strlen($script); $i++) {
+                    if ($script[$i] == '"') {
+                        break;
+                    } elseif (is_numeric($script[$i])) {
+                        $num = '';
+                        for ($j = $i; $j < strlen($script); $j++) {
+                            if ($script[$j] == ',' || $script[$j] == ' ' || $script[$j] == '}') {
+                                break;
+                            } else {
+                                $num .= $script[$j];
+                            }
+                        }
+                        $arraykeys[$i][] = $j;
+                        $arraykeys[$i][] = $num;
+
+                        break;
+                    } elseif ($script[$i] == ',') {
+                        break;
+                    }
+                }
+            }
+        }
+        krsort($arraykeys);
+        foreach ($arraykeys as $key => $val) {
+            $script = substr($script, 0, $key) . '"' . $val[1] . '"' . substr($script, $val[0]);
+        }
+        ?>
+        <?php echo $script; ?>
+    </script>
+    <?php
+endif;
+?>

@@ -1,0 +1,12 @@
+<?php
+/** @var $block \Reflektion\Utilities\Block\Analytics */
+$cartSkus = $block->getCartSkus();
+$skustr = '"'.implode('","',  $cartSkus ).'"';
+if ($skustr != "") {
+	$script = 'var rfk = rfk || []; rfk.push({"product_ids":['. $skustr.']});';
+} else {
+    $script .= 'var rfk = rfk || []; rfk.push({"product_ids":[]});';
+}
+
+?>
+<script type="text/javascript"><?php echo  $script ; ?></script>
