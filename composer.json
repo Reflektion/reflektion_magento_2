@@ -3,7 +3,9 @@
   "description": "Reflektion Search and Recommendation experience. http://reflektion.com",
   "homepage": "https://github.com/Reflektion/reflektion_magento_2",
   "type": "magento2-module",
-    "version": "1.0.2",
+  "version": "1.0.2",
+  "minimum-stability": "dev",
+  "prefer-stable": true
   "license": "GPL-3.0",
   "authors": [
     {
