@@ -3,6 +3,7 @@
     "description": "Reflektion Search and Recommendation experience. http://reflektion.com/",
     "homepage": "https://github.com/Reflektion/reflektion_magento_2",
     "type": "magento2-module",
+    "version": "2.0.5",
     "license": [
         "https://opensource.org/licenses/osl-3.0.php"
     ],
