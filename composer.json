@@ -1,12 +1,16 @@
 {
-    "name": "catalogexport/reflektion_magento_2",
+    "name": "reflektion/catalogexport",
     "description": "Reflektion Search and Recommendation experience. http://reflektion.com/",
-    "require": {
-    },
+    "homepage": "https://github.com/Reflektion/reflektion_magento_2",
     "type": "magento2-module",
-    "version": "1.0.2",
     "license": [
         "https://opensource.org/licenses/osl-3.0.php"
+    ],
+    "authors": [
+        {
+          "name": "Team Reflektion",
+          "email": "support@reflektion.com"
+        }
     ],
     "autoload": {
         "files": [
