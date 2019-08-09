@@ -141,7 +141,7 @@ class Base extends \Magento\Framework\Model\AbstractModel
         $this->_initAttributeSets($iDefaultStoreId); //uncomment afterwards
         $rootCatId = $this->storeManager->getWebsite($websiteId)->getDefaultStore()->getRootCategoryId();
         $catlistHtml = $this->rfkHelper->getTreeCategories($rootCatId);
-        $pageSize = 1000;
+        $pageSize = 100;
         $collection->setPageSize($pageSize);
         $pages = $collection->getLastPageNumber();
         $this->logger->info('------Pages------  ' . $pages);
