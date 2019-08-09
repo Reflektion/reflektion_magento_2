@@ -1,6 +1,8 @@
 {
     "name": "reflektion/reflektion_magento_2",
     "description": "Reflektion Search and Recommendation experience. http://reflektion.com/",
+    "homepage": "https://github.com/Reflektion/reflektion_magento_2",
+    "type": "magento2-module",
     "require": {
         "php": "~5.5.0|~5.6.0|~7.0.0|~7.1.0|~7.2.14.0|~7.3.5"
     },
