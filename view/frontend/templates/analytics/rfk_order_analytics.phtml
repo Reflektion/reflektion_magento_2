@@ -97,6 +97,7 @@ $notNumber = $block->getConfig('reflektion_analytics/script/number_attr');
 $arrayNotNumber = explode(',', $notNumber);
 ?>
 <script type="text/javascript">
+    var rfk = window.rfk = window.rfk || [];
     <?php
     $arraykeys = array();
     foreach ($arrayNotNumber as $arrayNotNumberE) {

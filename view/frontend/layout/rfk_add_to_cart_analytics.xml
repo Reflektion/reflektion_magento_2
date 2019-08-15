@@ -7,6 +7,7 @@
                     class="Reflektion\Catalogexport\Block\Analytics"
                     name="before_body_end_a2c_script"
                     template="Reflektion_Catalogexport::analytics/rfk_add_to_cart_analytics.phtml"
+                    cacheable="false"
             />
         </referenceContainer>
     </body>

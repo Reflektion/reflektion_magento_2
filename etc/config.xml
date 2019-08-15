@@ -22,6 +22,7 @@
                 }
                 </global_product_template>
                 <number_attr>sku,zip,id</number_attr>
+                <productviewedflag>disabled</productviewedflag>
                 <productviewed>
                 rfk.push(["trackEvent", {
                     "type": "view",
@@ -39,6 +40,7 @@
                     "attributes": "{ATTRIBUTES}"
                 }
                 </productviewedproduct>
+                <productaddedtocartflag>disabled</productaddedtocartflag>
                 <productaddedtocart>
                 rfk.push(["trackEvent", {
                     "type": "a2c",
@@ -58,6 +60,7 @@
                     "attributes": "{ATTRIBUTES}"
                 }
                 </productaddedtocart_template>
+                <statusofcartflag>disabled</statusofcartflag>
                 <statusofcart>
                 rfk.push(["trackEvent", {
                     "type": "status",
@@ -76,6 +79,7 @@
                     "attributes": "{ATTRIBUTES}"
                 }
                 </statusofcart_template>
+                <userloggedinflag>disabled</userloggedinflag>
                 <userloggedin>
                 rfk.push(["trackEvent", {
                     "type": "user",
@@ -92,6 +96,7 @@
                    }
                 }]);
                 </userloggedin>
+                <confirmedorderflag>disabled</confirmedorderflag>
                 <confirmedorder>
                 rfk.push(["trackEvent", {
                     "type": "order",

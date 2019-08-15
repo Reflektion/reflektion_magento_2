@@ -77,45 +77,59 @@ class Analytics implements \Magento\Framework\Event\ObserverInterface
             $update->addHandle('rfk_tag_search_view');
             return $this;
         }
-
+        $productViewedFlag = $this->analyticsHelper->getConfig("reflektion_analytics/script/productviewedflag");
+        $productAddedToCartFlag = $this->analyticsHelper->getConfig("reflektion_analytics/script/productaddedtocartflag");
+        $statusOfCartFlag = $this->analyticsHelper->getConfig("reflektion_analytics/script/statusofcartflag");
+        $userLoggedinFlag = $this->analyticsHelper->getConfig("reflektion_analytics/script/userloggedinflag");
+        $confirmedOrderFlag = $this->analyticsHelper->getConfig("reflektion_analytics/script/confirmedorderflag");
          //Check whether analytics is enabled or not
         if ($this->analyticsHelper->rfkAnalyticsEnabled())
         {
             return $this;
         }
         if ($actionEvent == "checkout_onepage_success") {//Order
-            $update = $layout->getUpdate();
-            $update->addHandle('rfk_order_analytics');
+            if ($confirmedOrderFlag == 'enabled') {
+                $update = $layout->getUpdate();
+                $update->addHandle('rfk_order_analytics');
+            }
         } else {
             if ($actionEvent == "catalog_product_view") {//pdp
-                $this->session->setData('rfk_product_view', "pdp");
-                $update = $layout->getUpdate();
-                $update->addHandle('rfk_product_view_analytics');
+                if ($productViewedFlag == 'enabled') {
+                    $this->session->setData('rfk_product_view', "pdp");
+                    $update = $layout->getUpdate();
+                    $update->addHandle('rfk_product_view_analytics');
+                }
             }
             if ($actionEvent == "checkout_cart_index") {//cart
-                $update = $layout->getUpdate();
-                $update->addHandle('rfk_cart_page_analytics_extra');
-                $update->addHandle('rfk_cart_page_analytics');
+                if ($statusOfCartFlag == 'enabled') {
+                    $update = $layout->getUpdate();
+                    $update->addHandle('rfk_cart_page_analytics_extra');
+                    $update->addHandle('rfk_cart_page_analytics');
+                }
                 if ($cartUpdated) {
                     $this->session->unsetData('cart_updated');
                 }
             } elseif ($cartUpdated) {
-                $update = $layout->getUpdate();
-                $update->addHandle('rfk_cart_page_analytics');
+                if ($statusOfCartFlag == 'enabled') {
+                    $update = $layout->getUpdate();
+                    $update->addHandle('rfk_cart_page_analytics');
+                }
                 $this->session->unsetData('cart_updated');
             }
-            if ($actionEvent == "catalog_product_add") {//Add to cart
+            if ($actionEvent == "catalog_product_add" && $productAddedToCartFlag == 'enabled') {//Add to cart
                 $update = $layout->getupdate();
                 $update->addhandle('rfk_add_to_cart_analytics');
             }
         }
         if ($this->session->getData('rfkcustomerlogin') == 'customer_login_rfk_push') {//customer login
             //push customer data
-            $update = $layout->getupdate();
-            $update->addhandle('rfk_customer_login_analytics');
+            if ($userLoggedinFlag == 'enabled') {
+                $update = $layout->getupdate();
+                $update->addhandle('rfk_customer_login_analytics');
+            }
             $this->session->unsetData('rfkcustomerlogin');
         }
-        if ($this->session->getData('addtocart_triggered') && $actionEvent != "checkout_cart_add") {
+        if ($this->session->getData('addtocart_triggered') && $actionEvent != "checkout_cart_add" && $productAddedToCartFlag == 'enabled') {
             $update = $layout->getupdate();
             $update->addhandle('rfk_add_to_cart_analytics');
         }

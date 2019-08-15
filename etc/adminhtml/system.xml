@@ -283,35 +283,55 @@
                     <label>Number attribute should be in double quotes</label>
                     <comment>Comma separated</comment>
                 </field>
-                <field id="productviewed" translate="label" type="textarea" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="productviewedflag" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Viewed Analytics</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="productviewed" translate="label" type="textarea" sortOrder="7" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Product Viewed</label>
                     <comment>Global/Default template used when template not defined for particular event</comment>
                 </field>
-                <field id="productquickview" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="productquickview" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Product Quick View Identifier</label>
                 </field>
-                <field id="productviewedproduct" translate="label" type="textarea" sortOrder="8" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="productviewedproduct" translate="label" type="textarea" sortOrder="9" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Product Viewed Product template</label>
                 </field>
-                <field id="productaddedtocart" translate="label" type="textarea" sortOrder="9" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="productaddedtocartflag" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add to cart Analytics</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="productaddedtocart" translate="label" type="textarea" sortOrder="11" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Add to cart</label>
                 </field>
-                <field id="productaddedtocart_template" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="productaddedtocart_template" translate="label" type="textarea" sortOrder="12" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Add to cart Product Template</label>
                 </field>
-                <field id="statusofcart" translate="label" type="textarea" sortOrder="11" showInDefault="11" showInWebsite="0" showInStore="0">
+                <field id="statusofcartflag" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Status of cart Analytics</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="statusofcart" translate="label" type="textarea" sortOrder="14" showInDefault="11" showInWebsite="0" showInStore="0">
                     <label>Status of cart</label>
                 </field>
-                <field id="statusofcart_template" translate="label" type="textarea" sortOrder="12" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="statusofcart_template" translate="label" type="textarea" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Status of Cart Template</label>
                 </field>
-                <field id="userloggedin" translate="label" type="textarea" sortOrder="13" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="userloggedinflag" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>User logged in Analytics</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="userloggedin" translate="label" type="textarea" sortOrder="17" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>User logged in</label>
                 </field>
-                <field id="confirmedorder" translate="label" type="textarea" sortOrder="14" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="confirmedorderflag" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Order Confirmation Analytics</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                </field>
+                <field id="confirmedorder" translate="label" type="textarea" sortOrder="19" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order Confirmation</label>
                 </field>
-                <field id="confirmedorderproduct" translate="label" type="textarea" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="confirmedorderproduct" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order Confirmation Product Data</label>
                 </field>
             </group>
