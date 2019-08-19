@@ -131,5 +131,14 @@
                 
             </script>
         </reflektion_analytics>
+        <reflektion_datafeeds>
+            <configurable_cron>
+                <frequency_min>0</frequency_min>
+                <frequency_hr>1</frequency_hr>
+                <frequency_day>*</frequency_day>
+                <frequency_month>*</frequency_month>
+                <frequency_wk>*</frequency_wk>
+            </configurable_cron>
+        </reflektion_datafeeds>
     </default>
 </config>
