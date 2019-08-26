@@ -7,7 +7,6 @@
                     class="Reflektion\Catalogexport\Block\Analytics"
                     name="before_body_end_script_order"
                     template="Reflektion_Catalogexport::analytics/rfk_order_analytics.phtml"
-                    cacheable="false"
             />
         </referenceContainer>
     </body>

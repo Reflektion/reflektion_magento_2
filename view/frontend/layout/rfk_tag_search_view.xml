@@ -6,7 +6,6 @@
                 class="Reflektion\Catalogexport\Block\Analytics"
                 name="rfk-block-1column"
                 template="Reflektion_Catalogexport::search/1column-reflektion.phtml"
-                cacheable="false"
         />
     </referenceContainer>
     <referenceBlock name="left_first" remove="true"/>
