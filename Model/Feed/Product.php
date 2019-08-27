@@ -70,9 +70,7 @@ class Product extends Base
 
         $collection
             ->addExpressionAttributeToSelect(
-                'visibility',
-                '(IF ({{visibility}} > 1 , 1, 0))',
-                'visibility'
+                'visibility', '{{visibility}}', 'visibility'
             );
         // Filter feed for given website
         $collection
