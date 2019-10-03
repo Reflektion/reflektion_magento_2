@@ -12,4 +12,5 @@
     <referenceBlock name="left_first" remove="true"/>
     <referenceBlock name="left" remove="true"/>
     <referenceBlock name="search.result" remove="true"/>
+    <referenceBlock name="search_result_impression" remove="true"/>
 </page>

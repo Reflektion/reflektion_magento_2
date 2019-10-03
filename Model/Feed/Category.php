@@ -30,6 +30,7 @@ class Category extends Base
         'breadcrumb' => 'Breadcrumb Name',
         'id_breadcrumb' => 'Breadcrumb Ids',
         'url' => 'Url',
+        'url_2' => 'Url 2',
         'url_key' => 'Url Key',
         'image' => 'Image',
         'meta_title' => 'meta_title',
@@ -177,6 +178,7 @@ class Category extends Base
                 $url = str_replace($remove, "", $this->categoryHelper->getCategoryUrl($category));
                 $url = str_replace($baseUrl, "", $url);
                 $catData[$i]['url'] = $url;
+                $catData[$i]['url_2'] = $category->getRequestPath();
                 $catData[$i]['url_key'] = $category->getUrlKey();
                 $catData[$i]['image'] = $category->getImageUrl() ? $category->getImageUrl() : '';
                 $newItem = $collection->getNewEmptyItem();
