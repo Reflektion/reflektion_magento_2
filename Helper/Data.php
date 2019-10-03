@@ -176,7 +176,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $categoryRepository = $this->categoryFactory->create();
         $categoryRepository
             ->addAttributeToSelect('*')
-            ->addAttributeToFilter('parent_id', ['eq' => $parentId]);
+            ->addAttributeToFilter('parent_id', ['eq' => $parentId])
+            ->addAttributeToFilter('is_active', ['eq' => 1]);
 
         foreach ($categoryRepository as $category) {
             $this->allCat[$category->getId()] = $category->getName();
