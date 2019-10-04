@@ -10,7 +10,7 @@
                     "address_line_1":"{street}", 
                     "city":"{city}",
                     "state":"{region}",
-                    "Zip":"{postcode}"
+                    "zip":"{postcode}"
                 }
                 </addressrfkattr>
                 <global_product_template>
@@ -124,7 +124,7 @@
                 {
                     "sku": "{sku}",
                     "price": "{price}",
-                    "quantity": "{qty}",
+                    "quantity": "{qty_ordered}",
                     "attributes": "{ATTRIBUTES}"
                 }
                 </confirmedorderproduct>
