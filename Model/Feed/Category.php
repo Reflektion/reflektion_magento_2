@@ -31,6 +31,7 @@ class Category extends Base
         'id_breadcrumb' => 'Breadcrumb Ids',
         'url' => 'Url',
         'url_2' => 'Url 2',
+        'url_3' => 'Url 3',
         'url_key' => 'Url Key',
         'image' => 'Image',
         'meta_title' => 'meta_title',
@@ -166,6 +167,16 @@ class Category extends Base
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
         $baseUrl = $storeManager->getStore()->getBaseUrl();
+        $coreRewriteTable = $catCollection->getResource()->getTable('url_rewrite');
+        $catCollection->getSelect()
+            ->columns(["cat_seo_url" => "(select " .
+                " concat('{$baseUrl}', url.request_path) " .
+                " from " .
+                " {$coreRewriteTable} url " .
+                " where  " .
+                " url.target_path = concat('catalog/category/view/id/',e.entity_id) " .
+                " limit 1)"]);
+
         foreach ($catCollection as $category) {
             try {
                 $catData[$i]['id'] = $category->getId();
@@ -179,6 +190,7 @@ class Category extends Base
                 $url = str_replace($baseUrl, "", $url);
                 $catData[$i]['url'] = $url;
                 $catData[$i]['url_2'] = $category->getRequestPath();
+                $catData[$i]['url_3'] = $category->getCatSeoUrl();
                 $catData[$i]['url_key'] = $category->getUrlKey();
                 $catData[$i]['image'] = $category->getImageUrl() ? $category->getImageUrl() : '';
                 $newItem = $collection->getNewEmptyItem();
