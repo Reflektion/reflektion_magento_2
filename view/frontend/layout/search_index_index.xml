@@ -7,7 +7,6 @@
                     class="Reflektion\Catalogexport\Block\Analytics"
                     name="myblock1"
                     template="Reflektion_Catalogexport::search/1column-reflektion.phtml"
-                    cacheable="false"
             />
         </referenceContainer>
     </body>

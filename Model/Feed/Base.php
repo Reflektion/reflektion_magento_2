@@ -51,6 +51,10 @@ class Base extends \Magento\Framework\Model\AbstractModel
      * @var \Reflektion\Catalogexport\Helper\Data
      */
     protected $rfkHelper;
+    /**
+    * @var \Magento\Framework\Module\Manager
+    */
+    protected $moduleManager;
 
     /**
      * Constructor
