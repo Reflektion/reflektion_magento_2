@@ -20,6 +20,7 @@ use Reflektion\Catalogexport\Helper\Csvfile;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Catalog\Model\ResourceModel\Category\Collection;
 use Magento\Framework\Data\Collection as DataCollection;
+use Magento\Catalog\Api\CategoryRepositoryInterface;
 
 class Category extends Base
 {
@@ -85,6 +86,7 @@ class Category extends Base
         \Magento\Catalog\Model\Category $category,
         \Reflektion\Catalogexport\Helper\Analytics $analyticsHelper,
         \Magento\Framework\Module\Manager $moduleManager,
+        \Magento\Catalog\Model\CategoryRepository $categoryRepository,
         Collection $collection
     ) {
 
@@ -104,6 +106,7 @@ class Category extends Base
         $this->category = $category;
         $this->analyticsHelper = $analyticsHelper;
         $this->collection = $collection;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function getFieldMap()
@@ -130,7 +133,7 @@ class Category extends Base
         $rootCategoryPath = $rootCategory->getPath();
         $catCollection = $this->collection
             ->addIsActiveFilter()
-            ->addUrlRewriteToResult()
+            //->addUrlRewriteToResult()
             ->addAttributeToSelect('meta_title')
             ->addAttributeToSelect('meta_description')
             ->addAttributeToSelect('meta_keywords')
@@ -166,6 +169,7 @@ class Category extends Base
         $catlist = $this->rfkHelper->getTreeCategories($rootCategoryId);
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+        $storeId = $this->storeManager->getStore()->getId();
         $baseUrl = $storeManager->getStore()->getBaseUrl();
         $coreRewriteTable = $catCollection->getResource()->getTable('url_rewrite');
         $catCollection->getSelect()
@@ -189,7 +193,7 @@ class Category extends Base
                 $url = str_replace($remove, "", $this->categoryHelper->getCategoryUrl($category));
                 $url = str_replace($baseUrl, "", $url);
                 $catData[$i]['url'] = $url;
-                $catData[$i]['url_2'] = $category->getRequestPath();
+                $catData[$i]['url_2'] = $this->categoryRepository->get($category->getId(), $storeId)->getUrl();
                 $catData[$i]['url_3'] = $category->getCatSeoUrl();
                 $catData[$i]['url_key'] = $category->getUrlKey();
                 $catData[$i]['image'] = $category->getImageUrl() ? $category->getImageUrl() : '';
