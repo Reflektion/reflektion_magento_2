@@ -24,6 +24,9 @@ class Index extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
+        $searchedKeyword = $this->getRequest()->getParam('q');
+        $resultPage = $this->_resultPageFactory->create();
+        $resultPage->getConfig()->getTitle()->set("Search results for: '" . $searchedKeyword . "'");
         $this->_view->loadLayout();
         $this->_view->renderLayout();
     }
