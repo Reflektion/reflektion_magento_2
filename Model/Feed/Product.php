@@ -195,7 +195,10 @@ class Product extends Base
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
             $websiteCode
         );
-        $baseUrlWp = preg_replace('#^https?:#', '', $baseUrl); // base url without http: or https:
+        $mediaUrl = $this->storeManager->getWebsite($websiteId)->getDefaultStore()->getBaseUrl(
+            \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
+        );
+        $baseUrlWp = preg_replace('#^https?:#', '', $mediaUrl); // base url without http: or https:
         $coreRewriteTable = $collection->getResource()->getTable('url_rewrite');
         
         $collection->getSelect()
