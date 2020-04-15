@@ -239,19 +239,19 @@ class Product extends Base
         $collection
             ->addExpressionAttributeToSelect(
                 'image_url', "if({{image}} <> '', " .
-                "  concat('{$baseUrlWp}', 'media/catalog/product' ,{{image}}), " .
+                "  concat('{$baseUrlWp}', 'catalog/product' ,{{image}}), " .
                 "  '')", 'image'
         );
         $collection
             ->addExpressionAttributeToSelect(
                 'small_image', "if({{small_image}} <> '', " .
-                "  concat('{$baseUrlWp}', 'media/catalog/product' ,{{small_image}}), " .
+                "  concat('{$baseUrlWp}', 'catalog/product' ,{{small_image}}), " .
                 "  '')", 'small_image'
         );
         $collection
             ->addExpressionAttributeToSelect(
                 'thumbnail', "if({{thumbnail}} <> '', " .
-                "  concat('{$baseUrlWp}', 'media/catalog/product' ,{{thumbnail}}), " .
+                "  concat('{$baseUrlWp}', 'catalog/product' ,{{thumbnail}}), " .
                 "  '')", 'thumbnail'
         );
 
