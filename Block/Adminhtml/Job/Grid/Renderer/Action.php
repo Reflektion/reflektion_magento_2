@@ -57,7 +57,7 @@ class Action extends \Magento\Backend\Block\Widget\Grid\Column\Renderer\Action
         } else {
             $this->getColumn()->setActions([[
                 'url' => '',
-                'caption' => __(''),
+                'caption' => '',
             ]]);
         }
 
