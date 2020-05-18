@@ -16,6 +16,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 class Job extends AbstractModel
 {
@@ -57,6 +58,10 @@ class Job extends AbstractModel
      */
     protected $dateTime;
     /**
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
+     */
+    protected $systemDateTime;
+    /**
      * @var \Reflektion\Catalogexport\Model\Generatefeeds
      */
     protected $genModel;
@@ -68,6 +73,10 @@ class Job extends AbstractModel
      * @var \Magento\Cron\Model\Schedule
      */
     protected $cronSchedule;
+    /**
+     * @var \Magento\Catalog\Model\Session
+     */
+    protected $session;
     /**
      * @var \Reflektion\Catalogexport\Helper\Email
      */
@@ -90,6 +99,7 @@ class Job extends AbstractModel
      * @param \Magento\Store\Model\StoreManagerInterface
      * @param \Magento\Framework\ObjectManagerInterface
      * @param \Magento\Framework\Stdlib\DateTime\DateTime
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface
      * @param \Reflektion\Catalogexport\Model\Generatefeeds
      * @param \Reflektion\Catalogexport\Model\Transferfeeds
      * @param \Magento\Cron\Model\Schedule $schedule
@@ -106,12 +116,14 @@ class Job extends AbstractModel
         StoreManagerInterface $storeManager,
         ObjectManagerInterface $objectManager,
         DateTime $dateTime,
+        TimezoneInterface $systemDateTime,
         Generatefeeds $generatefeeds,
         Transferfeeds $transferfeeds,
         \Magento\Cron\Model\Schedule $schedule,
         \Reflektion\Catalogexport\Helper\Email $emailHelper,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        \Magento\Catalog\Model\Session $session,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
@@ -120,10 +132,12 @@ class Job extends AbstractModel
         $this->storeManager = $storeManager;
         $this->objectManager = $objectManager;
         $this->dateTime = $dateTime;
+        $this->systemDateTime = $systemDateTime;
         $this->genModel = $generatefeeds;
         $this->tranModel = $transferfeeds;
         $this->cronSchedule = $schedule;
         $this->emailHelper = $emailHelper;
+        $this->session = $session;
     }
 
     /**
@@ -286,11 +300,23 @@ class Job extends AbstractModel
             $this->logger->info('Running job: ' . $this->getJobId());
             $this->logger->info('Website Id: ' . $this->getWebsiteId());
             $this->logger->info('Dependent On Job Id: ' . $this->getDependentOnJobId());
+            // Check if dependent job id is successfully executed
+            if ($this->getFeedType() == "" && $this->getDependentOnJobId() != null 
+                && $this->session->getdata("trigger_sftp_transfer") == 0 &&
+                $this->getType() == \Reflektion\Catalogexport\Model\Job::TYPE_TRANSFER) 
+            {
+                $this->setStatus(\Reflektion\Catalogexport\Model\Job::STATUS_ERROR);
+                $this->session->unsetData('trigger_sftp_transfer');
+                $this->setEndedAt($this->dateTime->gmtDate());
+                $this->setErrorMessage("Dependent Job failed");
+                $this->save();
+                $this->logger->info("Transfer Feed Job failed.");
+                return $this;
+            }
             $this->logger->info('Min Entity Id: ' . $this->getMinEntityId());
             $this->logger->info('Type : ' . $this->getType());
             $this->logger->info('Feed Type: ' . $this->getFeedType());
             $this->logger->info('Memory usage: ' . memory_get_usage());
-
             // Execute the job
             $this->executeJob();
 
@@ -299,6 +325,9 @@ class Job extends AbstractModel
         } catch (\Exception $e) {
             // Fail this job
             $this->setStatus(\Reflektion\Catalogexport\Model\Job::STATUS_ERROR);
+            if ($this->session->getdata("trigger_sftp_transfer") == 1) {
+                $this->session->setdata("trigger_sftp_transfer", 0);
+            }
             $this->setEndedAt($this->dateTime->gmtDate());
             $this->setErrorMessage($e->getMessage());
             $this->save();
@@ -358,10 +387,22 @@ class Job extends AbstractModel
                 $this->setMinEntityId($minEntityId);
                 break;
             case \Reflektion\Catalogexport\Model\Job::TYPE_TRANSFER:
-            case \Reflektion\Catalogexport\Model\Job::TYPE_TRANSFER_MANUAL:
                 // Call - \Reflektion\Catalogexport\Model\Transferfeeds
                 $this->tranModel->transfer($this->getWebsiteId());
                 $bDone = true;
+                break;
+            case \Reflektion\Catalogexport\Model\Job::TYPE_TRANSFER_MANUAL:
+                // Call - \Reflektion\Catalogexport\Model\Transferfeeds
+                if ($this->scopeConfig->getValue(
+                    'reflektion_datafeeds/feedsenabled/feed_jobs_retry',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+                    $websiteCode
+                ) != 'enabled') {
+                    $this->session->setdata("retry_transfer", 1);
+                }
+                $this->tranModel->transfer($this->getWebsiteId());
+                $bDone = true;
+                $this->session->unsetData("retry_transfer");
                 break;
         }
 
@@ -391,7 +432,7 @@ class Job extends AbstractModel
             if($expr !== null && trim($expr) !== '') {
                 $freqt = preg_split('#\s+#', $expr, null, PREG_SPLIT_NO_EMPTY);
                 if(count($freqt) === 5) {
-                    $time = $this->dateTime->gmtDate();
+                    $time = $this->systemDateTime->date()->format('Y-m-d H:i:s');
                     $time = strtotime($time);
                     $match[$websiteId] = $schedule->matchCronExpression($freqt[0], strftime('%M', $time))
                         && $schedule->matchCronExpression($freqt[1], strftime('%H', $time))
@@ -401,7 +442,6 @@ class Job extends AbstractModel
                 }
             }
         }
-
         return $match;
     }
 }

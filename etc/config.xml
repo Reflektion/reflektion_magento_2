@@ -139,6 +139,10 @@
                 <frequency_month>*</frequency_month>
                 <frequency_wk>*</frequency_wk>
             </configurable_cron>
+            <feedsenabled>
+                <feed_jobs_retry>disabled</feed_jobs_retry>
+                <product_rating>disabled</product_rating>
+            </feedsenabled>
         </reflektion_datafeeds>
     </default>
 </config>

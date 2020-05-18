@@ -19,6 +19,10 @@ class ExportFeedCron
      * @var \Reflektion\Catalogexport\Model\Job
      */
     protected $job;
+    /**
+     * @var \Magento\Catalog\Model\Session
+     */
+    protected $session;
 
     /**
      * ExportFeedCron constructor.
@@ -28,10 +32,12 @@ class ExportFeedCron
 
     public function __construct(
         \Reflektion\Catalogexport\Logger\Logger $logger,
-        \Reflektion\Catalogexport\Model\Job $job
+        \Reflektion\Catalogexport\Model\Job $job,
+        \Magento\Catalog\Model\Session $session
     ) {
         $this->logger = $logger;
         $this->job = $job;
+        $this->session = $session;
     }
 
     /**
@@ -56,6 +62,7 @@ class ExportFeedCron
 
         // Log mem usage
         $this->logger->info('Memory usage: ' . memory_get_usage());
+        $this->session->setdata("trigger_sftp_transfer", 1);
         $collectionJobs = $this->job->getCollection()
                             ->addFieldToFilter(
                                 'status',
@@ -63,10 +70,7 @@ class ExportFeedCron
                             );
         $countScheduled = $collectionJobs->getSize();
         for ($k = 0; $k < $countScheduled; $k++) {
-            $this->runJob(); //products
-            $this->runJob(); //categories
-            $this->runJob(); //sales
-            $this->runJob(); //file transfer
+            $this->runJob(); 
         }
     }
 
