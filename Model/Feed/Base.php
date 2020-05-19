@@ -129,7 +129,17 @@ class Base extends \Magento\Framework\Model\AbstractModel
         $websiteName = parse_url($this->storeManager->getWebsite($websiteId)->getDefaultStore()->getBaseUrl(), PHP_URL_HOST);
 
         // file generate
-        $filename = $exportPath . $this->DS . $websiteName . '_' . $websiteId . '_' . $feedType . '_feed.csv';
+        $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
+        $feedFilename = $this->scopeConfig->getValue(
+                'reflektion_datafeeds/feedsenabled/' . $feedType . '_feed_file_name',
+                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+                $websiteCode
+            );
+        if ($feedFilename == '') {
+            $filename = $exportPath . $this->DS . $websiteName . '_' . $websiteId . '_' . $feedType . '_feed.csv';
+        } else {
+            $filename = $exportPath . $this->DS . $feedFilename;
+        }
         $this->logger->info("csv file name :  " . $filename);
         $collection = $this->getFeedCollection($websiteId);
         $headerColumns = array_values($this->getFieldMap($websiteId));
@@ -145,7 +155,16 @@ class Base extends \Magento\Framework\Model\AbstractModel
         $this->_initAttributeSets($iDefaultStoreId); //uncomment afterwards
         $rootCatId = $this->storeManager->getWebsite($websiteId)->getDefaultStore()->getRootCategoryId();
         $catlistHtml = $this->rfkHelper->getTreeCategories($rootCatId);
-        $pageSize = 100;
+        $feedPageSize = $this->scopeConfig->getValue(
+            'reflektion_datafeeds/feedsenabled/product_feed_page_count',
+            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+        if ($feedPageSize != "" && is_numeric($feedPageSize)) {
+            $pageSize = $feedPageSize;
+        } else {
+            $pageSize = 100;
+        }
         $collection->setPageSize($pageSize);
         $pages = $collection->getLastPageNumber();
         $this->logger->info('------Pages------  ' . $pages);

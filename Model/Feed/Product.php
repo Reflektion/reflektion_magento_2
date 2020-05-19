@@ -44,6 +44,16 @@ class Product extends Base
 
     public function getFieldMap($websiteId = null)
     {
+        $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
+        $enRating = $this->scopeConfig->getValue(
+            'reflektion_datafeeds/feedsenabled/product_rating',
+            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+        if ($enRating == 'enabled') {
+            $this->fieldMap['review_count'] = 'review_count';
+            $this->fieldMap['review_average'] = 'review_average';
+        }
         return $this->fieldMap;
     }
 
@@ -183,7 +193,39 @@ class Product extends Base
                 "  where  " .
                 "    pc.product_id = e.entity_id " .
                 "  )"]);
-
+        $enRating = $this->scopeConfig->getValue(
+            'reflektion_datafeeds/feedsenabled/product_rating',
+            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );;
+        if ($enRating == 'enabled') {
+            $reviewSummary = $collection->getResource()->getTable('review_entity_summary');
+            $iDefaultStoreId = $this->storeManager->getWebsite($websiteId)->getDefaultStore()->getId();
+            $collection->getSelect()
+                    ->columns(array(
+                        'review_count' =>
+                        "  (select " .
+                        "    rv.reviews_count " .
+                        "  from " .
+                        "    {$reviewSummary} rv " .
+                        "  where  " .
+                        "    rv.entity_pk_value = e.entity_id AND" .
+                        " rv.store_id = $iDefaultStoreId" .
+                        "  limit 1) "
+                            ,));
+            $collection->getSelect()
+                    ->columns(array(
+                        'review_average' =>
+                        "  (select " .
+                        "    rv.rating_summary " .
+                        "  from " .
+                        "    {$reviewSummary} rv " .
+                        "  where  " .
+                        "    rv.entity_pk_value = e.entity_id AND" .
+                        " rv.store_id = $iDefaultStoreId" .
+                        "  limit 1) "
+                            ,));
+        }
         $baseUrl = $this->storeManager->getWebsite($websiteId)->getDefaultStore()->getBaseUrl();
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');

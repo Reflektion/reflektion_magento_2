@@ -88,6 +88,12 @@ class Transferfeeds
             }
             $this->logger->info('Sucessfully transferred data feeds for website.');
         } catch (\Exception $e) {
+            if ($this->session->getdata("retry_transfer") != "" && $this->session->getdata("retry_transfer") == 1)
+            {
+                $this->transfer($websiteId);
+                $this->session->unsetData("retry_transfer");
+                $this->logger->info('Retry Transfer Feed files.');
+            }
             $this->logger->info('Failed to transfer data feeds for website.');
             $this->logger->info($e->getMessage());
             throw $e;
@@ -97,18 +103,49 @@ class Transferfeeds
     {
         $feedPath = $this->directory_list->getPath('var') . DIRECTORY_SEPARATOR . Generatefeeds::REFLEKTION_FEED_PATH;
         $fileList = [];
+        $matchFeed = [];
         // Open directory
         $dh = opendir($feedPath);
         if ($dh === false) {
             throw new \Exception('Failed to open feed directory: ' . $feedPath);
         }
+        $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
+        $websiteName = parse_url($this->storeManager->getWebsite($websiteId)->getDefaultStore()->getBaseUrl(), PHP_URL_HOST);
+        foreach (Generatefeeds::getFeedTypes() as $curType) {
+            if ($this->scopeConfig->getValue(
+                    'reflektion_datafeeds/feedsenabled/' . $curType,
+                    \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+                    $websiteCode
+                ) == 'enabled') {
+                if ($this->scopeConfig->getValue(
+                    'reflektion_datafeeds/feedsenabled/' . $curType . '_feed_file_name',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+                    $websiteCode
+                ) != '') {
+                    $matchFeed[] = $this->scopeConfig->getValue(
+                    'reflektion_datafeeds/feedsenabled/' . $curType . '_feed_file_name',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE, $websiteCode);
+                } else {
+                    $matchFeed[] = $websiteName . '_' . $websiteId . '_' . $curType . '_feed.csv';
+                }
+            }
+        }
+
+
         // Files in directory
         while (($entry = readdir($dh)) !== false) {
+
             $fullpath = $feedPath . DIRECTORY_SEPARATOR . $entry;
             // Check if have a file
             if ($this->fileHelper->isFile($fullpath)) {
-               $fileList[] = $fullpath;
-            }
+                foreach ($matchFeed as $matchFeedEle) {  
+                    // Check if our file is for the correct websiteId
+                    if (strpos($fullpath, $matchFeedEle) !== FALSE) { 
+                        $fileList[] = $fullpath;                      
+                    }                       
+                }     
+            }               
+
         }
         closedir($dh);
         $this->logger->info('Found ' . count($fileList) . ' feed files for website id: ' . $websiteId);
