@@ -36,7 +36,6 @@ class Product extends Base
         'parent_id_list' => 'parent_id_list',
         'parent_id_relation' => 'parent_id_relation',
         'parent_id_relation_list' => 'parent_id_relation_list',
-
         'entity_id' => 'Prod Id',
     ];
     protected $attrSetIdToNameForSwatch = [];
@@ -50,9 +49,18 @@ class Product extends Base
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
             $websiteCode
         );
+        $enDirectPriceExport = $this->scopeConfig->getValue(
+            'reflektion_datafeeds/feedsenabled/product_price',
+            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
         if ($enRating == 'enabled') {
             $this->fieldMap['review_count'] = 'review_count';
             $this->fieldMap['review_average'] = 'review_average';
+        }
+        if ($enDirectPriceExport == 'enabled') {
+            $this->fieldMap['price_2'] = 'Price 2';
+            $this->fieldMap['final_price_2'] = 'Special Price 2';
         }
         return $this->fieldMap;
     }
@@ -71,6 +79,7 @@ class Product extends Base
     public function getFeedCollection($websiteId)
     {
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
+        $iDefaultStoreId = $this->storeManager->getWebsite($websiteId)->getDefaultStore()->getId();
         $collection = $this->objectManager->create('Magento\Catalog\Model\ResourceModel\Product\Collection');
         $collection
             ->addAttributeToSelect('name');
@@ -85,8 +94,58 @@ class Product extends Base
         // Filter feed for given website
         $collection
             ->addWebsiteFilter($websiteId);
-        $collection
-            ->addPriceData(null, $websiteId); //Have to use this version so you can set the website id
+        $enDirectPriceExport = $this->scopeConfig->getValue(
+            'reflektion_datafeeds/feedsenabled/product_price',
+            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+            $websiteCode
+        );
+        if($enDirectPriceExport == 'enabled') {
+            $prodPriceTable = $collection->getResource()->getTable('catalog_product_entity_decimal');
+            $eavAttribute = $collection->getResource()->getTable('eav_attribute');
+            $catalogProductIndexPrice = $collection->getResource()->getTable('catalog_product_index_price');
+            if ($this->moduleManager->isOutputEnabled('Magento_Enterprise')) {
+                $decimalTableCol = 'row_id';
+            } else {
+                $decimalTableCol = 'entity_id';
+            }
+            $collection->getSelect()
+                ->columns(["price_2" => "(select value " .
+                    "  from " .
+                    "    {$prodPriceTable} t1 " .
+                    "  join {$eavAttribute} t2 on t1.attribute_id = t2.attribute_id " .
+                    "  where  " .
+                    "    t1.{$decimalTableCol} = e.entity_id AND" .                  
+                    " t2.attribute_code= 'price'" .
+                    "  limit 1)"]);
+            $collection->getSelect()
+                ->columns(["final_price_2" => "(select value " .
+                    "  from " .
+                    "    {$prodPriceTable} t1 " .
+                    "  join {$eavAttribute} t2 on t1.attribute_id = t2.attribute_id " .
+                    "  where  " .
+                    "    t1.{$decimalTableCol} = e.entity_id AND" .                 
+                    " t2.attribute_code= 'special_price'" .
+                    "  limit 1)"]);
+            $collection->getSelect()
+                ->columns(["price" => "(select price " .
+                    "  from " .
+                    "    {$catalogProductIndexPrice} t1 " .
+                    "  where  " .
+                    "    t1.entity_id = e.entity_id AND" .
+                    " t1.website_id = $websiteId " .                    
+                    "  limit 1)"]);
+            $collection->getSelect()
+                ->columns(["final_price" => "(select final_price " .
+                    "  from " .
+                    "    {$catalogProductIndexPrice} t1 " .
+                    "  where  " .
+                    "    t1.entity_id = e.entity_id AND" .
+                    " t1.website_id = $websiteId " .                    
+                    "  limit 1)"]);
+        } else {
+            $collection
+                ->addPriceData(null, $websiteId); //Have to use this version so you can set the website id
+        }
         $cataloginv = $collection->getResource()->getTable('cataloginventory_stock_item');
         $collection->joinTable(
             ['at_qty' => $cataloginv],
@@ -200,7 +259,6 @@ class Product extends Base
         );;
         if ($enRating == 'enabled') {
             $reviewSummary = $collection->getResource()->getTable('review_entity_summary');
-            $iDefaultStoreId = $this->storeManager->getWebsite($websiteId)->getDefaultStore()->getId();
             $collection->getSelect()
                     ->columns(array(
                         'review_count' =>
