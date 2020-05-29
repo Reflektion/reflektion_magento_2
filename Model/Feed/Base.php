@@ -227,7 +227,7 @@ class Base extends \Magento\Framework\Model\AbstractModel
             $collection->clear();
             //test code remove later on
             $this->logger->info('Finished processing batch ' . $currentPage);
-        } while ($currentPage <= $pages);
+        } while ($currentPage < $pages);
 
         // Check if collection is empty
         if (count($collection) == 0) {
