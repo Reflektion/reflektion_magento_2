@@ -307,7 +307,8 @@ class Product extends Base
                 " from " .
                 " {$coreRewriteTable} url " .
                 " where  " .
-                " url.target_path = concat('catalog/product/view/id/',e.entity_id) " .
+                " url.target_path = concat('catalog/product/view/id/',e.entity_id) AND" .
+                " url.store_id = $iDefaultStoreId " .
                 " limit 1)"]);
 
          $collection
@@ -322,7 +323,8 @@ class Product extends Base
                 " {$coreRewriteTable} url " .
                 " where  " .
                 " target_path = concat('catalog/product/view/id/', " .
-                "IF(parent_id_relation IS NULL , e.entity_id, parent_id_relation)) " .
+                "IF(parent_id_relation IS NULL , e.entity_id, parent_id_relation)) AND" .
+                " url.store_id = $iDefaultStoreId " .
                 " limit 1)"]);
 
         /*$collection
