@@ -91,9 +91,15 @@ class Product extends Base
             ->addExpressionAttributeToSelect(
                 'visibility', '{{visibility}}', 'visibility'
             );
-        // Filter feed for given website
-        $collection
-            ->addWebsiteFilter($websiteId);
+        if ($this->scopeConfig->getValue(
+                'reflektion_datafeeds/feedsenabled/store_level',
+                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,
+                $websiteCode
+            ) == 'enabled') {
+            $collection->addStoreFilter($iDefaultStoreId);
+        } else {
+            $collection->addWebsiteFilter($websiteId);
+        }
         $enDirectPriceExport = $this->scopeConfig->getValue(
             'reflektion_datafeeds/feedsenabled/product_price',
             \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE,

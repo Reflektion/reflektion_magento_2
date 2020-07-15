@@ -214,21 +214,28 @@
                     <label>Product Feed</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
                 </field>
-                <field id="product_price" translate="label" type="select" sortOrder="3" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="store_level" translate="label" type="select" sortOrder="3" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Store Level Attributes</label>
+                    <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
+                    <depends>
+                        <field id="product">enabled</field>
+                    </depends>
+                </field>
+                <field id="product_price" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Direct export(No indexing check)</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
                     <depends>
                         <field id="product">enabled</field>
                     </depends>
                 </field>
-                <field id="product_rating" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="product_rating" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Add Ratings and Reviews Count</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
                     <depends>
                         <field id="product">enabled</field>
                     </depends>
                 </field>
-                <field id="product_feed_file_name" translate="label" type="text" sortOrder="5" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="product_feed_file_name" translate="label" type="text" sortOrder="6" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Product Feed File Name</label>
                     <comment><![CDATA[
                                 Use default if empty.
@@ -238,7 +245,7 @@
                         <field id="product">enabled</field>
                     </depends>
                 </field>
-                <field id="product_feed_page_count" translate="label" type="text" sortOrder="6" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="product_feed_page_count" translate="label" type="text" sortOrder="7" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Product Feed Export Count per Request</label>
                     <validate>validate-number validate-length maximum-length-3</validate>
                     <comment><![CDATA[
@@ -249,18 +256,18 @@
                         <field id="product">enabled</field>
                     </depends>
                 </field>
-                <field id="product_attributes" translate="label" type="multiselect" sortOrder="7" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="product_attributes" translate="label" type="multiselect" sortOrder="8" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Product Custom Attributes</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\ProductAttributes</source_model>
                     <depends>
                         <field id="product">enabled</field>
                     </depends>
                 </field>
-                <field id="category" translate="label" type="select" sortOrder="8" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="category" translate="label" type="select" sortOrder="9" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Category Feed</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
                 </field>
-                <field id="category_feed_file_name" translate="label" type="text" sortOrder="9" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="category_feed_file_name" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Category Feed File Name</label>
                     <comment><![CDATA[
                                 Use default if empty.
@@ -270,11 +277,11 @@
                         <field id="category">enabled</field>
                     </depends>
                 </field>
-                <field id="transaction" translate="label" type="select" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="transaction" translate="label" type="select" sortOrder="11" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Transactions Feed</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
                 </field>
-                <field id="transaction_feed_file_name" translate="label" type="text" sortOrder="11" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="transaction_feed_file_name" translate="label" type="text" sortOrder="12" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Transaction Feed File Name</label>
                     <comment><![CDATA[
                                 Use default if empty.
@@ -284,7 +291,7 @@
                         <field id="transaction">enabled</field>
                     </depends>
                 </field>
-                <field id="date_range" translate="label" type="text" sortOrder="12" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="date_range" translate="label" type="text" sortOrder="13" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Transaction Feed select export range</label>
                     <comment><![CDATA[
                                 Number of days (Default is 30)
@@ -294,25 +301,25 @@
                         <field id="transaction">enabled</field>
                     </depends>
                 </field>
-                <field id="shipping" translate="label" type="select" sortOrder="13" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="shipping" translate="label" type="select" sortOrder="14" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Add Shipping address to transaction feed</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
                     <depends>
                         <field id="transaction">enabled</field>
                     </depends>
                 </field>
-                <field id="billing" translate="label" type="select" sortOrder="14" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="billing" translate="label" type="select" sortOrder="15" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Add Billing address to transaction feed</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
                     <depends>
                         <field id="transaction">enabled</field>
                     </depends>
                 </field>
-                <field id="promotion" translate="label" type="select" sortOrder="15" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="promotion" translate="label" type="select" sortOrder="16" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Promotions Feed</label>
                     <source_model>Reflektion\Catalogexport\Model\System\Config\EnableToggle</source_model>
                 </field>
-                <field id="promotion_feed_file_name" translate="label" type="text" sortOrder="16" showInDefault="0" showInWebsite="1" showInStore="0">
+                <field id="promotion_feed_file_name" translate="label" type="text" sortOrder="17" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Promotion Feed File Name</label>
                     <comment><![CDATA[
                                 Use default if empty.

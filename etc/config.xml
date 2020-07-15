@@ -140,6 +140,7 @@
                 <frequency_wk>*</frequency_wk>
             </configurable_cron>
             <feedsenabled>
+                <store_level>disabled</store_level>
                 <product_price>disabled</product_price>
                 <feed_jobs_retry>disabled</feed_jobs_retry>
                 <product_rating>disabled</product_rating>
