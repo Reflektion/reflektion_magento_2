@@ -154,7 +154,6 @@ class Job extends AbstractModel
         $collection->getSelect()
             ->where(
                 'status = ' . \Reflektion\Catalogexport\Model\Job::STATUS_SCHEDULED
-                . ' or status = ' . \Reflektion\Catalogexport\Model\Job::STATUS_RUNNING
             )
             ->where(
                 \Reflektion\Catalogexport\Model\Job::STATUS_SCHEDULED
@@ -372,6 +371,7 @@ class Job extends AbstractModel
                     $minEntityId,
                     $bDone
                 );
+                $bDone = true;
                 $this->setMinEntityId($minEntityId);
                 break;
             case \Reflektion\Catalogexport\Model\Job::TYPE_GENERATE_DAILY:
@@ -384,6 +384,7 @@ class Job extends AbstractModel
                     $minEntityId,
                     $bDone
                 );
+                $bDone = true;
                 $this->setMinEntityId($minEntityId);
                 break;
             case \Reflektion\Catalogexport\Model\Job::TYPE_TRANSFER:
