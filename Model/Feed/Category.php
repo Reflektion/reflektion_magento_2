@@ -38,6 +38,7 @@ class Category extends Base
         'meta_title' => 'meta_title',
         'meta_description' => 'meta_description',
         'meta_keywords' => 'meta_keywords',
+        'description' => 'description',
     ];
     /**
      * @var \Magento\Catalog\Helper\Category
@@ -137,6 +138,7 @@ class Category extends Base
             ->addAttributeToSelect('meta_title')
             ->addAttributeToSelect('meta_description')
             ->addAttributeToSelect('meta_keywords')
+            ->addAttributeToSelect('description')
             ->addAttributeToSelect('image')
             ->addAttributeToSelect('url_key')
             ->addFieldToFilter('path', ['like' => $rootCategoryPath . '/%'])
@@ -186,7 +188,8 @@ class Category extends Base
                 $catData[$i]['id'] = $category->getId();
                 $catData[$i]['name'] = $catlist['name_' . $category->getId()];
             	$catData[$i]['meta_title'] = $category->getMetaTitle();
-            	$catData[$i]['meta_description'] = $category->getMetaDescription();
+                $catData[$i]['meta_description'] = $category->getMetaDescription();
+            	$catData[$i]['description'] = $category->getDescription();
             	$catData[$i]['meta_keywords'] = $category->getMetaKeywords();
                 $catData[$i]['breadcrumb'] = $catlist[$category->getId()];
                 $catData[$i]['id_breadcrumb'] = $catlist['id_breadcrumb_' . $category->getId()];
