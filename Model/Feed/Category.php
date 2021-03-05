@@ -142,8 +142,7 @@ class Category extends Base
             ->addAttributeToSelect('image')
             ->addAttributeToSelect('url_key')
             ->addFieldToFilter('path', ['like' => $rootCategoryPath . '/%'])
-            ->addFieldToFilter('url_key', ['like' => '_%'])
-            ->addAttributeToFilter('include_in_menu', 1);
+            ->addFieldToFilter('url_key', ['like' => '_%']);
 
         $catData = [];
         $i = 0;
