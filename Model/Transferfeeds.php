@@ -43,6 +43,10 @@ class Transferfeeds
      * @var \Reflektion\Catalogexport\Helper\Csvfile
      */
     protected $fileHelper;
+    /**
+     * @var \Magento\Catalog\Model\Session
+     */
+    protected $session;
 
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -51,7 +55,8 @@ class Transferfeeds
         \Magento\Framework\App\Filesystem\DirectoryList $directory_list,
         ObjectManagerInterface $objectManager,
         SftpConnection $rfkHelper,
-        \Reflektion\Catalogexport\Helper\Csvfile $csvfile
+        \Reflektion\Catalogexport\Helper\Csvfile $csvfile,
+        \Magento\Catalog\Model\Session $session
     ) {
         $this->storeManager = $storeManager;
         $this->logger = $logger;
@@ -60,6 +65,7 @@ class Transferfeeds
         $this->_objectManager = $objectManager;
         $this->rfkHelper = $rfkHelper;
         $this->fileHelper = $csvfile;
+        $this->session = $session;
     }
 
     /**
