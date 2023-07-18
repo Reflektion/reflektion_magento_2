@@ -78,7 +78,7 @@ if ($product) {
             $script = substr($script, 0, $key) . '"' . $val[1] . '"' . substr($script, $val[0]);
         }
         ?>
-        <?php echo $script; ?>
+        <?php /* @noEscape */ echo $script; ?>
 
     </script>
 <?php } ?>
