@@ -159,6 +159,10 @@ class Job extends AbstractModel
                 \Reflektion\Catalogexport\Model\Job::STATUS_SCHEDULED
                 . " not in (select status from {$table} mbj2 where mbj2.job_id = main_table.dependent_on_job_id) "
             )
+            ->where(
+                \Reflektion\Catalogexport\Model\Job::STATUS_RUNNING
+                . " not in (select status from {$table} mbj2 where mbj2.job_id = main_table.dependent_on_job_id) "
+            )
             ->order('job_id')
             ->limit(1);
         $dateTime = $objectManager->get("\Magento\Framework\Stdlib\DateTime\DateTime");
